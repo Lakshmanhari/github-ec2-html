@@ -1,11 +1,897 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark scroll-smooth">
 <head>
-    <title>My EC2 Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX MARTIAL ARTS | Elite Combat & Conditioning Academy</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            50: '#FDF8E2',
+                            100: '#FBF1C5',
+                            500: '#D4AF37',
+                            600: '#AA8C2C',
+                            700: '#806921',
+                        },
+                        crimson: {
+                            DEFAULT: '#DC2626',
+                            500: '#DC2626',
+                            600: '#B91C1C',
+                            700: '#991B1B',
+                        },
+                        darkBg: '#0A0A0C',
+                        cardBg: '#121217',
+                        cardBorder: '#1E1E26'
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0C;
+            color: #F3F4F6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0C;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Glowing text & box shadows */
+        .text-glow-gold {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+        .text-glow-crimson {
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+        }
+        .box-glow-gold:hover {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        .box-glow-crimson:hover {
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.25);
+        }
+
+        /* Background grid pattern */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Radial gradient vignette */
+        .vignette-overlay {
+            background: radial-gradient(circle at center, rgba(10, 10, 12, 0.3) 0%, rgba(10, 10, 12, 0.95) 90%);
+        }
+    </style>
 </head>
-<body>
-    <h1>Hello from EC2!</h1>
-    <p>Deployed using GitHub Actions.</p>
-    <h1>Hello from my GitHub Actions CI/CD!</h1>
+<body class="bg-darkBg text-gray-100 antialiased selection:bg-gold selection:text-black">
+
+    <!-- Background Canvas for dynamic martial arts spark/smoke effect -->
+    <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+    <div class="fixed inset-0 bg-grid pointer-events-none z-0"></div>
+    <div class="fixed inset-0 vignette-overlay pointer-events-none z-0"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-darkBg/80 backdrop-blur-md border-b border-cardBorder">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-gold to-crimson p-0.5 flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <div class="w-full h-full bg-darkBg rounded-[7px] flex items-center justify-center">
+                            <i data-lucide="flame" class="w-5 h-5 text-gold"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-cinzel font-black text-xl tracking-wider text-white group-hover:text-gold transition-colors">APEX</span>
+                        <span class="text-[10px] tracking-[0.3em] text-gold font-semibold uppercase -mt-1">Martial Arts</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#about" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Philosophy</a>
+                    <a href="#disciplines" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Disciplines</a>
+                    <a href="#trainers" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Elite Masters</a>
+                    <a href="#schedule" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Schedule</a>
+                    <a href="#pricing" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Membership</a>
+                    <a href="#gallery" class="text-sm font-medium text-gray-300 hover:text-gold transition-colors">Dojo</a>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button onclick="openModal()" class="relative group overflow-hidden rounded-lg p-px font-semibold text-xs uppercase tracking-widest">
+                        <span class="absolute inset-0 bg-gradient-to-r from-gold via-crimson to-gold animate-pulse"></span>
+                        <span class="relative block px-5 py-2.5 rounded-[7px] bg-darkBg text-white group-hover:bg-opacity-80 transition-all">
+                            Book Free Trial
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 text-gray-300 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-cardBorder px-4 pt-2 pb-6 space-y-3">
+            <a href="#about" class="block py-2 text-gray-300 hover:text-gold font-medium">Philosophy</a>
+            <a href="#disciplines" class="block py-2 text-gray-300 hover:text-gold font-medium">Disciplines</a>
+            <a href="#trainers" class="block py-2 text-gray-300 hover:text-gold font-medium">Elite Masters</a>
+            <a href="#schedule" class="block py-2 text-gray-300 hover:text-gold font-medium">Schedule</a>
+            <a href="#pricing" class="block py-2 text-gray-300 hover:text-gold font-medium">Membership</a>
+            <a href="#gallery" class="block py-2 text-gray-300 hover:text-gold font-medium">Dojo</a>
+            <button onclick="openModal()" class="w-full mt-2 py-3 bg-gradient-to-r from-gold to-crimson text-black font-bold uppercase rounded-lg text-xs tracking-wider">
+                Book Free Trial
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 z-10">
+        <div class="max-w-5xl mx-auto text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cardBg border border-gold/30 mb-8 animate-bounce">
+                <i data-lucide="shield" class="w-4 h-4 text-gold"></i>
+                <span class="text-xs uppercase tracking-widest text-gold font-semibold">Forge Your Spirit • Conquer Your Limits</span>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="font-cinzel text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white mb-6 leading-none">
+                Master the <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold via-amber-200 to-crimson text-glow-gold">Ultimate</span> Combat
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 mb-10 font-normal leading-relaxed">
+                Step into the elite training ground where ancient martial arts disciplines meet modern science-backed combat conditioning. Train under world champions.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="openModal()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-gold to-amber-600 text-black font-bold uppercase tracking-wider text-sm shadow-lg shadow-gold/20 hover:scale-105 transition-transform flex items-center justify-center gap-3">
+                    <span>Claim Free Trial Class</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+                <a href="#disciplines" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-cardBg hover:bg-cardBorder border border-cardBorder text-white font-semibold uppercase tracking-wider text-sm transition-all flex items-center justify-center gap-3">
+                    <span>Explore Disciplines</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-gold"></i>
+                </a>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-10 border-t border-cardBorder/80">
+                <div class="p-4 rounded-xl bg-cardBg/50 border border-cardBorder backdrop-blur-sm">
+                    <div class="font-cinzel text-3xl md:text-4xl font-bold text-gold mb-1">15+</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">World Champions</div>
+                </div>
+                <div class="p-4 rounded-xl bg-cardBg/50 border border-cardBorder backdrop-blur-sm">
+                    <div class="font-cinzel text-3xl md:text-4xl font-bold text-crimson mb-1">4,500</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Sq. Ft. Pro Training Arena</div>
+                </div>
+                <div class="p-4 rounded-xl bg-cardBg/50 border border-cardBorder backdrop-blur-sm">
+                    <div class="font-cinzel text-3xl md:text-4xl font-bold text-gold mb-1">100%</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Authentic Lineage</div>
+                </div>
+                <div class="p-4 rounded-xl bg-cardBg/50 border border-cardBorder backdrop-blur-sm">
+                    <div class="font-cinzel text-3xl md:text-4xl font-bold text-white mb-1">24/7</div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Elite Conditioning</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About / Philosophy Section -->
+    <section id="about" class="py-24 relative z-10 bg-gradient-to-b from-darkBg to-cardBg/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-gold/10 text-gold text-xs font-semibold uppercase tracking-wider mb-4">
+                        The Apex Way
+                    </div>
+                    <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white mb-6 uppercase leading-tight">
+                        Discipline. Honor. <span class="text-gold">Unbreakable</span> Strength.
+                    </h2>
+                    <p class="text-gray-400 text-base leading-relaxed mb-6">
+                        At Apex Martial Arts Academy, combat is not merely about physical dominance—it is a profound journey of self-mastery. Founded by international combat veterans, our academy blends rigorous traditional values with cutting-edge athletic performance analytics.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-gold"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">Traditional Lineage & Modern Conditioning</h4>
+                                <p class="text-xs text-gray-400">Master authentic forms while building functional strength, speed, and durability.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-gold/20 flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-gold"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">World-Class Safety & Mats</h4>
+                                <p class="text-xs text-gray-400">Custom shock-absorbing tatami mats and high-grade striking bags engineered for joint safety.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openModal()" class="px-6 py-3 rounded-lg border border-gold text-gold font-semibold uppercase text-xs tracking-widest hover:bg-gold hover:text-black transition-all">
+                        Experience Our Dojo
+                    </button>
+                </div>
+                <!-- Visual Box with image fallback -->
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-gold to-crimson rounded-2xl blur opacity-30 group-hover:opacity-75 transition duration-500"></div>
+                    <div class="relative rounded-2xl overflow-hidden border border-cardBorder bg-cardBg aspect-[4/3]">
+                        <img src="https://placehold.co/800x600/121217/D4AF37?text=Apex+Dojo+Training" alt="Dojo Training" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/800x600/121217/D4AF37?text=Apex+Dojo+Training'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-gold uppercase tracking-widest font-semibold">State of the Art Facility</span>
+                                <h4 class="font-cinzel text-xl font-bold text-white">The Grand Training Arena</h4>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-gold/20 backdrop-blur-md flex items-center justify-center border border-gold/40 text-gold">
+                                <i data-lucide="play" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Disciplines Section -->
+    <section id="disciplines" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-gold text-xs uppercase tracking-[0.2em] font-semibold mb-3 block">Elite Programs</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white uppercase mb-4">Choose Your Path</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Select a combat discipline to view curriculum, intensity levels, and sparring specifications.</p>
+            </div>
+
+            <!-- Discipline Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="switchDiscipline('muaythai')" id="btn-muaythai" class="discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-gradient-to-r from-gold to-amber-600 text-black shadow-lg shadow-gold/20">
+                    Muay Thai
+                </button>
+                <button onclick="switchDiscipline('bjj')" id="btn-bjj" class="discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-cardBg border border-cardBorder text-gray-300 hover:text-white hover:border-gold/50">
+                    Brazilian Jiu-Jitsu
+                </button>
+                <button onclick="switchDiscipline('karate')" id="btn-karate" class="discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-cardBg border border-cardBorder text-gray-300 hover:text-white hover:border-gold/50">
+                    Kyokushin Karate
+                </button>
+                <button onclick="switchDiscipline('mma')" id="btn-mma" class="discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-cardBg border border-cardBorder text-gray-300 hover:text-white hover:border-gold/50">
+                    Pro MMA
+                </button>
+            </div>
+
+            <!-- Discipline Content Card -->
+            <div class="bg-cardBg border border-cardBorder rounded-2xl p-6 sm:p-10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div id="discipline-container" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div id="disc-badge" class="inline-flex items-center gap-2 px-3 py-1 rounded bg-gold/10 text-gold text-xs font-semibold uppercase tracking-wider mb-4">
+                            Art of Eight Limbs
+                        </div>
+                        <h3 id="disc-title" class="font-cinzel text-3xl sm:text-4xl font-bold text-white mb-4 uppercase">Muay Thai Striking</h3>
+                        <p id="disc-desc" class="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
+                            Master the devastating use of fists, elbows, knees, and shins. Developed over centuries of battlefield warfare in Thailand, Muay Thai builds unmatched cardiovascular endurance, shin conditioning, and lethal knockout power.
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="p-4 rounded-xl bg-darkBg/60 border border-cardBorder">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Intensity Level</span>
+                                <span id="disc-intensity" class="font-semibold text-gold text-sm uppercase">Extreme / Pro</span>
+                            </div>
+                            <div class="p-4 rounded-xl bg-darkBg/60 border border-cardBorder">
+                                <span class="text-xs text-gray-500 uppercase tracking-widest block mb-1">Primary Focus</span>
+                                <span id="disc-focus" class="font-semibold text-white text-sm uppercase">Clinch & Striking</span>
+                            </div>
+                        </div>
+
+                        <button onclick="openModal()" class="px-6 py-3 rounded-lg bg-gold text-black font-bold uppercase text-xs tracking-widest hover:bg-amber-400 transition-all">
+                            Enroll in Muay Thai
+                        </button>
+                    </div>
+
+                    <div class="relative rounded-xl overflow-hidden aspect-[16/10] border border-cardBorder">
+                        <img id="disc-img" src="https://placehold.co/700x450/1A1A22/D4AF37?text=Muay+Thai+Class" alt="Muay Thai Training" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/700x450/1A1A22/D4AF37?text=Muay+Thai+Class'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-60"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Elite Trainers Section -->
+    <section id="trainers" class="py-24 relative z-10 bg-gradient-to-b from-cardBg/30 to-darkBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-gold text-xs uppercase tracking-[0.2em] font-semibold mb-3 block">Legendary Lineage</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white uppercase mb-4">Meet Your Masters</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Our instructors hold championship titles across international promotions and decades of teaching mastery.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Trainer 1 -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden group hover:border-gold/50 transition-all duration-300">
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                        <img src="https://placehold.co/600x800/1A1A22/D4AF37?text=Master+Kaelen+Voss" alt="Master Kaelen Voss" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x800/1A1A22/D4AF37?text=Master+Kaelen+Voss'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                            <div>
+                                <span class="text-xs text-gold font-semibold uppercase tracking-widest">Head Striking Coach</span>
+                                <h3 class="font-cinzel text-xl font-bold text-white">Master Kaelen Voss</h3>
+                            </div>
+                            <span class="px-2.5 py-1 rounded bg-gold text-black font-bold text-[10px] uppercase">Muay Thai 3x Champ</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Veteran of 84 professional bouts with lethal clinch techniques and champion cornering experience.</p>
+                        <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-cardBorder">
+                            <span>Experience: <strong class="text-white">22 Years</strong></span>
+                            <span>Specialty: <strong class="text-gold">Knees & Elbows</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainer 2 -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden group hover:border-gold/50 transition-all duration-300">
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                        <img src="https://placehold.co/600x800/1A1A22/D4AF37?text=Professor+Renato+Silva" alt="Professor Renato Silva" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x800/1A1A22/D4AF37?text=Professor+Renato+Silva'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                            <div>
+                                <span class="text-xs text-gold font-semibold uppercase tracking-widest">Head BJJ Instructor</span>
+                                <h3 class="font-cinzel text-xl font-bold text-white">Prof. Renato Silva</h3>
+                            </div>
+                            <span class="px-2.5 py-1 rounded bg-gold text-black font-bold text-[10px] uppercase">BJJ Black Belt 4th Dan</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">ADCC veteran and master strategist specializing in lethal submission chains and positional dominance.</p>
+                        <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-cardBorder">
+                            <span>Experience: <strong class="text-white">18 Years</strong></span>
+                            <span>Specialty: <strong class="text-gold">Submissions</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainer 3 -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl overflow-hidden group hover:border-gold/50 transition-all duration-300">
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                        <img src="https://placehold.co/600x800/1A1A22/D4AF37?text=Sensei+Elena+Rostova" alt="Sensei Elena Rostova" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x800/1A1A22/D4AF37?text=Sensei+Elena+Rostova'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                            <div>
+                                <span class="text-xs text-gold font-semibold uppercase tracking-widest">Karate & MMA Coach</span>
+                                <h3 class="font-cinzel text-xl font-bold text-white">Sensei Elena Rostova</h3>
+                            </div>
+                            <span class="px-2.5 py-1 rounded bg-crimson text-white font-bold text-[10px] uppercase">MMA Pro Fighter</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-400 text-xs leading-relaxed mb-4">Lightning-fast blitz striking and elite cage wrestling coordinator for professional contenders.</p>
+                        <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-cardBorder">
+                            <span>Experience: <strong class="text-white">15 Years</strong></span>
+                            <span>Specialty: <strong class="text-gold">Blitz & Takedowns</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-gold text-xs uppercase tracking-[0.2em] font-semibold mb-3 block">Weekly Timetable</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white uppercase mb-4">Training Schedule</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Join morning conditioning or evening sparring sessions tailored for all skill levels.</p>
+            </div>
+
+            <div class="overflow-x-auto bg-cardBg border border-cardBorder rounded-2xl p-6">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-cardBorder text-xs text-gold uppercase tracking-wider">
+                            <th class="py-4 px-4">Time</th>
+                            <th class="py-4 px-4">Monday</th>
+                            <th class="py-4 px-4">Tuesday</th>
+                            <th class="py-4 px-4">Wednesday</th>
+                            <th class="py-4 px-4">Thursday</th>
+                            <th class="py-4 px-4">Friday</th>
+                            <th class="py-4 px-4">Saturday</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-cardBorder/50 text-gray-300">
+                        <tr>
+                            <td class="py-4 px-4 font-mono text-xs text-gold">06:00 AM</td>
+                            <td class="py-4 px-4 font-semibold text-white">Morning Muay Thai</td>
+                            <td class="py-4 px-4 text-gray-500">Open Mat</td>
+                            <td class="py-4 px-4 font-semibold text-white">Morning Muay Thai</td>
+                            <td class="py-4 px-4 text-gray-500">Open Mat</td>
+                            <td class="py-4 px-4 font-semibold text-white">Conditioning</td>
+                            <td class="py-4 px-4 font-semibold text-gold">Sparring Wars</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 font-mono text-xs text-gold">12:00 PM</td>
+                            <td class="py-4 px-4 text-gray-500">Lunch Drill</td>
+                            <td class="py-4 px-4 font-semibold text-white">BJJ Fundamentals</td>
+                            <td class="py-4 px-4 text-gray-500">Lunch Drill</td>
+                            <td class="py-4 px-4 font-semibold text-white">BJJ Fundamentals</td>
+                            <td class="py-4 px-4 text-gray-500">Lunch Drill</td>
+                            <td class="py-4 px-4 text-gray-500">Closed</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 font-mono text-xs text-gold">05:30 PM</td>
+                            <td class="py-4 px-4 font-semibold text-white">Advanced BJJ</td>
+                            <td class="py-4 px-4 font-semibold text-white">Pro Striking</td>
+                            <td class="py-4 px-4 font-semibold text-white">Advanced BJJ</td>
+                            <td class="py-4 px-4 font-semibold text-white">Pro Striking</td>
+                            <td class="py-4 px-4 font-semibold text-white">MMA Cage Tactics</td>
+                            <td class="py-4 px-4 font-semibold text-white">Junior Warriors</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 font-mono text-xs text-gold">07:30 PM</td>
+                            <td class="py-4 px-4 font-semibold text-crimson">Pro Fighter Sparring</td>
+                            <td class="py-4 px-4 font-semibold text-white">Karate Kata & Kumite</td>
+                            <td class="py-4 px-4 font-semibold text-crimson">Pro Fighter Sparring</td>
+                            <td class="py-4 px-4 font-semibold text-white">Karate Kata & Kumite</td>
+                            <td class="py-4 px-4 font-semibold text-white">Submission Wrestling</td>
+                            <td class="py-4 px-4 text-gray-500">Seminar Series</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Pricing Section -->
+    <section id="pricing" class="py-24 relative z-10 bg-gradient-to-b from-darkBg to-cardBg/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-gold text-xs uppercase tracking-[0.2em] font-semibold mb-3 block">Investment</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white uppercase mb-4">Membership Tiers</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Unlock full access to our world-class facilities, unlimited classes, and expert coaching.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+                <!-- Tier 1 -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-8 flex flex-col justify-between hover:border-gold/40 transition-all">
+                    <div>
+                        <div class="text-xs uppercase tracking-widest text-gold font-semibold mb-2">Initiate</div>
+                        <h3 class="font-cinzel text-2xl font-bold text-white mb-4">Single Discipline</h3>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="font-cinzel text-4xl font-bold text-white">$120</span>
+                            <span class="text-gray-400 text-xs">/ month</span>
+                        </div>
+                        <p class="text-gray-400 text-xs mb-6">Ideal for practitioners focusing strictly on one combat art.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Choose 1 Discipline (Muay Thai or BJJ)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Access to 3 classes per week</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Standard Locker Room Access</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal()" class="w-full py-3 rounded-xl border border-gold text-gold font-semibold uppercase text-xs tracking-widest hover:bg-gold hover:text-black transition-all">
+                        Join Initiate
+                    </button>
+                </div>
+
+                <!-- Tier 2 - Featured -->
+                <div class="bg-gradient-to-b from-cardBg to-darkBg border-2 border-gold rounded-2xl p-8 flex flex-col justify-between relative shadow-2xl shadow-gold/10 transform md:-translate-y-4">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gold text-black font-bold text-[10px] uppercase tracking-widest rounded-full">
+                        Most Popular
+                    </div>
+                    <div>
+                        <div class="text-xs uppercase tracking-widest text-gold font-semibold mb-2">Warrior</div>
+                        <h3 class="font-cinzel text-2xl font-bold text-white mb-4">Unlimited Combat</h3>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="font-cinzel text-4xl font-bold text-gold">$180</span>
+                            <span class="text-gray-400 text-xs">/ month</span>
+                        </div>
+                        <p class="text-gray-400 text-xs mb-6">Full unlimited access to all combat arts and conditioning gear.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Unlimited Access to ALL Disciplines</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Access to Morning & Evening Sessions</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>Free Sauna & Recovery Zone</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-gold"></i>
+                                <span>1 Free Guest Pass per Month</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold to-amber-500 text-black font-bold uppercase text-xs tracking-widest shadow-lg shadow-gold/20 hover:scale-105 transition-all">
+                        Claim Warrior Access
+                    </button>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="bg-cardBg border border-cardBorder rounded-2xl p-8 flex flex-col justify-between hover:border-gold/40 transition-all">
+                    <div>
+                        <div class="text-xs uppercase tracking-widest text-crimson font-semibold mb-2">Apex Elite</div>
+                        <h3 class="font-cinzel text-2xl font-bold text-white mb-4">Pro Fighter Camp</h3>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="font-cinzel text-4xl font-bold text-white">$280</span>
+                            <span class="text-gray-400 text-xs">/ month</span>
+                        </div>
+                        <p class="text-gray-400 text-xs mb-6">For competitive fighters and serious martial artists seeking 1-on-1 focus.</p>
+                        <ul class="space-y-3 text-xs text-gray-300 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-crimson"></i>
+                                <span>Everything in Unlimited Warrior Plan</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-crimson"></i>
+                                <span>2 Private 1-on-1 Coaching Sessions</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-crimson"></i>
+                                <span>Custom Dietary & Fight Camp Nutrition</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-crimson"></i>
+                                <span>Dedicated Pro Locker & Gear Storage</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openModal()" class="w-full py-3 rounded-xl border border-cardBorder text-white font-semibold uppercase text-xs tracking-widest hover:border-crimson hover:text-crimson transition-all">
+                        Apply for Pro Camp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dojo Gallery Section -->
+    <section id="gallery" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-gold text-xs uppercase tracking-[0.2em] font-semibold mb-3 block">Visual Tour</span>
+                <h2 class="font-cinzel text-3xl sm:text-5xl font-bold text-white uppercase mb-4">Inside The Dojo</h2>
+                <p class="text-gray-400 text-sm sm:text-base">Explore our state-of-the-art combat arena, heavy bag stations, and recovery suites.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="relative group rounded-xl overflow-hidden aspect-square border border-cardBorder">
+                    <img src="https://placehold.co/600x600/121217/D4AF37?text=Heavy+Bag+Line" alt="Heavy Bags" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/121217/D4AF37?text=Heavy+Bag+Line'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    <span class="absolute bottom-4 left-4 text-xs font-semibold text-white tracking-widest uppercase">Heavy Bag Line</span>
+                </div>
+                <div class="relative group rounded-xl overflow-hidden aspect-square border border-cardBorder">
+                    <img src="https://placehold.co/600x600/121217/D4AF37?text=Tatami+Mat+Arena" alt="Tatami Mat Arena" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/121217/D4AF37?text=Tatami+Mat+Arena'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    <span class="absolute bottom-4 left-4 text-xs font-semibold text-white tracking-widest uppercase">Tatami Wrestling Arena</span>
+                </div>
+                <div class="relative group rounded-xl overflow-hidden aspect-square border border-cardBorder">
+                    <img src="https://placehold.co/600x600/121217/D4AF37?text=Pro+Octagon" alt="Pro Octagon" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/121217/D4AF37?text=Pro+Octagon'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    <span class="absolute bottom-4 left-4 text-xs font-semibold text-white tracking-widest uppercase">Championship Octagon</span>
+                </div>
+                <div class="relative group rounded-xl overflow-hidden aspect-square border border-cardBorder">
+                    <img src="https://placehold.co/600x600/121217/D4AF37?text=Conditioning+Zone" alt="Conditioning Zone" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/121217/D4AF37?text=Conditioning+Zone'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent opacity-80 group-hover:opacity-40 transition-opacity"></div>
+                    <span class="absolute bottom-4 left-4 text-xs font-semibold text-white tracking-widest uppercase">Strength & Recovery Suite</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-cardBg border-t border-cardBorder pt-16 pb-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-gold to-crimson p-0.5 flex items-center justify-center">
+                            <div class="w-full h-full bg-darkBg rounded-[7px] flex items-center justify-center">
+                                <i data-lucide="flame" class="w-4 h-4 text-gold"></i>
+                            </div>
+                        </div>
+                        <span class="font-cinzel font-black text-lg tracking-wider text-white">APEX</span>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        The pinnacle of martial arts instruction and character building. Forge your mind, body, and spirit with us.
+                    </p>
+                    <div class="flex items-center gap-3 text-gray-400">
+                        <a href="#" class="w-8 h-8 rounded-lg bg-darkBg border border-cardBorder flex items-center justify-center hover:text-gold transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-darkBg border border-cardBorder flex items-center justify-center hover:text-gold transition-colors"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-darkBg border border-cardBorder flex items-center justify-center hover:text-gold transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-cinzel font-bold text-white text-sm uppercase tracking-wider mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li><a href="#about" class="hover:text-gold transition-colors">Our Philosophy</a></li>
+                        <li><a href="#disciplines" class="hover:text-gold transition-colors">Combat Disciplines</a></li>
+                        <li><a href="#trainers" class="hover:text-gold transition-colors">Elite Masters</a></li>
+                        <li><a href="#schedule" class="hover:text-gold transition-colors">Class Timetable</a></li>
+                        <li><a href="#pricing" class="hover:text-gold transition-colors">Membership Tiers</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-cinzel font-bold text-white text-sm uppercase tracking-wider mb-4">Academy Hours</h4>
+                    <ul class="space-y-2 text-xs text-gray-400">
+                        <li class="flex justify-between"><span>Mon - Fri:</span> <span class="text-white font-mono">06:00 AM - 10:00 PM</span></li>
+                        <li class="flex justify-between"><span>Saturday:</span> <span class="text-white font-mono">08:00 AM - 06:00 PM</span></li>
+                        <li class="flex justify-between"><span>Sunday:</span> <span class="text-white font-mono">10:00 AM - 04:00 PM</span></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-cinzel font-bold text-white text-sm uppercase tracking-wider mb-4">Location</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                        742 Combat Avenue, Sector 9<br>
+                        Neo City, State 90210
+                    </p>
+                    <p class="text-xs text-gold font-mono">Phone: +1 (800) 555-APEX</p>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-cardBorder/80 text-center text-xs text-gray-500">
+                &copy; 2026 Apex Martial Arts Academy. All Rights Reserved. Forged in Discipline.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Modal Contact / Free Trial Form -->
+    <div id="contact-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="bg-cardBg border border-cardBorder rounded-2xl w-full max-w-lg p-6 sm:p-8 relative shadow-2xl transform transition-all">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <span class="text-gold text-xs uppercase tracking-widest font-semibold block mb-1">Begin Your Journey</span>
+                <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-white uppercase">Claim Free Trial Class</h3>
+            </div>
+
+            <form id="trial-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 font-medium">Full Name</label>
+                    <input type="text" required placeholder="Bruce Wayne" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 font-medium">Email Address</label>
+                    <input type="email" required placeholder="bruce@wayneenterprises.com" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 font-medium">Phone Number</label>
+                    <input type="tel" required placeholder="+1 (555) 019-2834" class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1.5 font-medium">Preferred Discipline</label>
+                    <select class="w-full bg-darkBg border border-cardBorder rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold transition-colors">
+                        <option>Muay Thai Striking</option>
+                        <option>Brazilian Jiu-Jitsu (BJJ)</option>
+                        <option>Kyokushin Karate</option>
+                        <option>Professional MMA</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold to-amber-500 text-black font-bold uppercase text-xs tracking-widest shadow-lg shadow-gold/20 hover:scale-[1.02] transition-all mt-2">
+                    Submit Trial Request
+                </button>
+            </form>
+            <div id="success-msg" class="hidden text-center py-8">
+                <div class="w-16 h-16 bg-gold/20 text-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="check" class="w-8 h-8"></i>
+                </div>
+                <h4 class="font-cinzel text-xl font-bold text-white mb-2">Request Received!</h4>
+                <p class="text-xs text-gray-400">Our grandmaster will contact you within 2 hours to confirm your trial slot.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modal triggers
+        const modal = document.getElementById('contact-modal');
+        function openModal() {
+            modal.classList.remove('hidden');
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.getElementById('trial-form').reset();
+            document.getElementById('trial-form').classList.remove('hidden');
+            document.getElementById('success-msg').classList.add('hidden');
+        }
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Form Submission handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            document.getElementById('trial-form').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        // Discipline switch data & logic
+        const disciplineData = {
+            muaythai: {
+                badge: 'Art of Eight Limbs',
+                title: 'Muay Thai Striking',
+                desc: 'Master the devastating use of fists, elbows, knees, and shins. Developed over centuries of battlefield warfare in Thailand, Muay Thai builds unmatched cardiovascular endurance, shin conditioning, and lethal knockout power.',
+                intensity: 'Extreme / Pro',
+                focus: 'Clinch & Striking',
+                img: 'https://placehold.co/700x450/1A1A22/D4AF37?text=Muay+Thai+Class'
+            },
+            bjj: {
+                badge: 'The Gentle Art',
+                title: 'Brazilian Jiu-Jitsu',
+                desc: 'Overcome larger, stronger opponents through leverage, joint locks, and chokeholds. BJJ is the ultimate ground combat system tested rigorously in elite mixed martial arts competitions worldwide.',
+                intensity: 'High / Tactical',
+                focus: 'Grappling & Submissions',
+                img: 'https://placehold.co/700x450/1A1A22/D4AF37?text=BJJ+Grappling'
+            },
+            karate: {
+                badge: 'Empty Hand Mastery',
+                title: 'Kyokushin Karate',
+                desc: 'Full-contact striking discipline emphasizing mental fortitude, lightning-fast linear kicks, powerful punches, and disciplined conditioning of the human body into a weapon.',
+                intensity: 'Rigorous / Traditional',
+                focus: 'Striking & Conditioning',
+                img: 'https://placehold.co/700x450/1A1A22/D4AF37?text=Karate+Kata'
+            },
+            mma: {
+                badge: 'Ultimate Combat',
+                title: 'Professional MMA',
+                desc: 'The synthesis of all combat systems. Seamlessly transition from elite striking to wrestling takedowns, cage control, and submission grappling under professional fight camp standards.',
+                intensity: 'Champion Level',
+                focus: 'Complete Hybrid Combat',
+                img: 'https://placehold.co/700x450/1A1A22/D4AF37?text=Pro+MMA+Cage'
+            }
+        };
+
+        function switchDiscipline(key) {
+            // Update buttons
+            document.querySelectorAll('.discipline-tab').forEach(btn => {
+                btn.className = 'discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-cardBg border border-cardBorder text-gray-300 hover:text-white hover:border-gold/50';
+            });
+            const activeBtn = document.getElementById(`btn-${key}`);
+            activeBtn.className = 'discipline-tab px-6 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all bg-gradient-to-r from-gold to-amber-600 text-black shadow-lg shadow-gold/20';
+
+            // Update content with smooth fade
+            const container = document.getElementById('discipline-container');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                const data = disciplineData[key];
+                document.getElementById('disc-badge').innerText = data.badge;
+                document.getElementById('disc-title').innerText = data.title;
+                document.getElementById('disc-desc').innerText = data.desc;
+                document.getElementById('disc-intensity').innerText = data.intensity;
+                document.getElementById('disc-focus').innerText = data.focus;
+                document.getElementById('disc-img').src = data.img;
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        // Add smooth transition to discipline container
+        document.getElementById('discipline-container').style.transition = 'opacity 0.2s ease-in-out';
+
+        // Background Dynamic Canvas Particle / Spark Effect
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const particleCount = 40;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 0.5,
+                color: Math.random() > 0.5 ? '#D4AF37' : '#DC2626',
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: -Math.random() * 0.8 - 0.2,
+                opacity: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                if (p.y < 0) {
+                    p.y = canvas.height + 10;
+                    p.x = Math.random() * canvas.width;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.opacity;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
 </body>
 </html>
